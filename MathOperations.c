@@ -236,7 +236,7 @@ float** resultMatrix, int rowsOfResultMatrix, int columnsOfResultMatrix){
 
 #include <stdlib.h>
 
-int** int_transpose(int** array, int rows, int columns){
+void int_transpose(int*** array, int rows, int columns){
 
     int** temp_array=(int**)malloc(columns * sizeof(int*));
 
@@ -249,11 +249,16 @@ int** int_transpose(int** array, int rows, int columns){
     {
         for (register int j = 0; j < columns; j++)
         {
-            temp_array[j][i] = array[i][j];
+            temp_array[j][i] = (*array)[i][j];
         }
     }
+
+    for (int i = 0; i < rows; i++) {
+        free((*array)[i]);
+    }
+    free(*array);
     
-    array=temp_array;
+    *array=temp_array;
 }
 
 void double_transpose(double*** array, int rows, int columns){
