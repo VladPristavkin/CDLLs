@@ -1,0 +1,51 @@
+ [DllImport("D:\\CDLLs\\MathOperations.dll", CallingConvention = CallingConvention.Cdecl)]
+        public unsafe static extern int int_matrix_multiplication(int** leftMatrix, int rowsOfLeftMatrix, int columnsOfLeftMatrix,
+int** rightMatrix, int columnsOfRightMatrix,
+int** resultMatrix, int rowsOfResultMatrix, int columnsOfResultMatrix);
+
+        public unsafe static void Main()
+        {
+            int rows = 3; int columns = 4;
+
+            int[][] leftMatrix = new int[rows][];
+            int[][] rightMatrix = new int[columns][];
+            int[][] resultMatrix = new int[rows][];
+
+            Fill(leftMatrix, rows, columns);
+            Fill(rightMatrix, columns, rows);
+            Fill(resultMatrix, rows, rows);
+
+
+            int** left = (int**)Marshal.AllocHGlobal(leftMatrix.Length * sizeof(int*));
+            int** right = (int**)Marshal.AllocHGlobal(rightMatrix.Length * sizeof(int*));
+            int** result = (int**)Marshal.AllocHGlobal(resultMatrix.Length * sizeof(int*));
+
+
+            void FillMethod(int[][] matrix, int row, int column, ref int** mat)
+            {
+                for (int i = 0; i < row; i++)
+                {
+                    int[] array = matrix[i];
+                    int* arrayPtr = (int*)Marshal.AllocHGlobal(array.Length * sizeof(int));
+                    for (int j = 0; j < array.Length; j++)
+                    {
+                        arrayPtr[j] = array[j];
+                    }
+                    mat[i] = arrayPtr;
+                }
+            }
+
+            FillMethod(leftMatrix, rows, columns, ref left);
+            FillMethod(rightMatrix, columns, rows, ref right);
+            FillMethod(resultMatrix, rows, rows, ref result);
+
+
+
+            int_matrix_multiplication(left, rows, columns, right, rows, result, rows, rows);
+
+            PrintMatrix(left, rows, columns);
+            PrintMatrix(right, columns, rows);
+            PrintMatrix(result, rows, rows);
+
+        }
+//TODO: free function
