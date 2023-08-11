@@ -253,12 +253,22 @@ void int_transpose(int** array, int rows, int columns){
         }
     }
 
-    // for (int i = 0; i < rows; i++) {
-    //     free((*array)[i]);
-    // }
-    // free(*array);
+    for (int i = 0; i < rows; i++) {
+        free(array[i]);
+    }
+    free(array);
     
-    // *array=temp_array;
+    array=(int**)malloc(columns * sizeof(int*));
+    for (register int i = 0; i < columns; i++)
+    {
+        array[i]=(int*)malloc(rows * sizeof(int));
+    }
+    array=temp_array;
+
+    for (int i = 0; i < columns; i++) {
+        free(temp_array[i]);
+    }
+    free(temp_array);
 }
 
 void double_transpose(double*** array, int rows, int columns){
